@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Security Finding | SecureFactory</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            background: #f1f4f9;
+            color: #17243a;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(20, 40, 70, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #8290a3;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce3ec;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button, .back-link {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button {
+            background: #137da9;
+            color: white;
+            font-weight: 600;
+        }
+
+        .back-link {
+            background: #e9eef5;
+            color: #34445b;
+            margin-left: 8px;
+        }
+
+        .errorlist {
+            color: #c63b3b;
+            font-size: 12px;
+        }
+
+        @media(max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Edit Security Finding</h2>
+
+    <p class="subtitle">
+        Update the details of the selected security finding.
+    </p>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="field">
+            <label>Finding Title</label>
+            {{ form.title }}
+            {{ form.title.errors }}
+        </div>
+
+        <div class="field">
+            <label>Infrastructure Pillar</label>
+            {{ form.pillar }}
+            {{ form.pillar.errors }}
+        </div>
+
+        <div class="field">
+            <label>Severity</label>
+            {{ form.severity }}
+            {{ form.severity.errors }}
+        </div>
+
+        <div class="field">
+            <label>Status</label>
+            {{ form.status }}
+            {{ form.status.errors }}
+        </div>
+
+        <div class="field">
+            <label>Date Discovered</label>
+            {{ form.date_discovered }}
+            {{ form.date_discovered.errors }}
+        </div>
+
+        <div class="field">
+            <label>Description</label>
+            {{ form.description }}
+            {{ form.description.errors }}
+        </div>
+
+        <button type="submit">Save Changes</button>
+
+        <a href="{% url 'dashboard' %}" class="back-link">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

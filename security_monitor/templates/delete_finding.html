@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Security Finding | SecureFactory</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 15px;
+            background: #f1f4f9;
+            color: #17243a;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 70px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(20, 40, 70, 0.06);
+        }
+
+        .warning {
+            width: 55px;
+            height: 55px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #fde8e8;
+            color: #c63b3b;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        h2 {
+            margin-bottom: 12px;
+        }
+
+        p {
+            color: #77849a;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .finding-title {
+            color: #17243a;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        button, .cancel {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        button {
+            background: #d64545;
+            color: white;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #b83232;
+        }
+
+        .cancel {
+            background: #e9eef5;
+            color: #34445b;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="warning">!</div>
+
+    <h2>Delete Security Finding?</h2>
+
+    <p>
+        Are you sure you want to delete this security finding?
+        This action cannot be undone.
+    </p>
+
+    <div class="finding-title">
+        {{ finding.title }}
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <button type="submit">
+            Yes, Delete Finding
+        </button>
+
+        <a href="{% url 'dashboard' %}" class="cancel">
+            Cancel
+        </a>
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,796 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Code Factory | Security Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f4f9;
+            color: #17243a;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #101b30;
+            color: white;
+            padding: 28px 18px;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: 700;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .brand span {
+            color: #25c4e8;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #8293ad;
+            padding: 0 12px;
+            margin-bottom: 40px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            color: #74849e;
+            letter-spacing: 1.5px;
+            padding: 0 12px;
+            margin-bottom: 13px;
+        }
+
+        .nav-item {
+            display: block;
+            color: #aebbd0;
+            text-decoration: none;
+            padding: 13px 12px;
+            margin-bottom: 7px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .nav-item.active {
+            background: #1c3453;
+            color: #38c9ec;
+            border-left: 3px solid #25c4e8;
+        }
+
+        .nav-item:hover {
+            background: #1c3453;
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: 65px;
+            padding: 15px 12px;
+            border-top: 1px solid #293750;
+            color: #8293ad;
+            font-size: 12px;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .topbar p {
+            color: #8793a5;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user {
+            background: #eaf4fb;
+            color: #17628c;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-link {
+            display: inline-block;
+            background: #101b30;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .logout-link:hover {
+            background: #1c3453;
+        }
+
+        .content {
+            padding: 32px 35px;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #77849a;
+            font-size: 14px;
+        }
+
+        .status {
+            background: #e2f7ef;
+            color: #16865c;
+            padding: 9px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* STATISTICS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 27px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e7ecf3;
+            border-radius: 11px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(20, 40, 70, 0.03);
+        }
+
+        .stat-label {
+            color: #7c899e;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .stat-number {
+            font-size: 31px;
+            font-weight: 700;
+            color: #172b4d;
+        }
+
+        .stat-note {
+            font-size: 11px;
+            color: #9aa5b5;
+            margin-top: 8px;
+        }
+
+        .blue { border-top: 3px solid #258bd5; }
+        .red { border-top: 3px solid #e05252; }
+        .amber { border-top: 3px solid #e6a23c; }
+        .green { border-top: 3px solid #22a879; }
+
+        /* PANELS */
+
+        .panel {
+            background: white;
+            border: 1px solid #e7ecf3;
+            border-radius: 11px;
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .panel-heading h3 {
+            font-size: 16px;
+        }
+
+        .panel-heading span {
+            color: #8b98aa;
+            font-size: 12px;
+        }
+
+        /* INFRASTRUCTURE PILLARS */
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 13px;
+        }
+
+        .pillar {
+            background: #f5f8fc;
+            border: 1px solid #e5ebf3;
+            border-radius: 9px;
+            padding: 20px 13px;
+            text-align: center;
+        }
+
+        .pillar-icon {
+            background: #e1f3fb;
+            color: #137da9;
+            width: 43px;
+            height: 43px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 13px;
+            font-size: 19px;
+        }
+
+        .pillar h4 {
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .pillar p {
+            font-size: 10px;
+            color: #8995a7;
+        }
+
+        /* LOWER PANELS */
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .severity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 13px;
+            gap: 12px;
+        }
+
+        .severity-item:last-child {
+            border-bottom: none;
+        }
+
+        .tag {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .critical {
+            background: #fde8e8;
+            color: #c63b3b;
+        }
+
+        .high {
+            background: #fff0df;
+            color: #c77b20;
+        }
+
+        .medium {
+            background: #fff8d9;
+            color: #a88716;
+        }
+
+        .low {
+            background: #e5f5ed;
+            color: #23845c;
+        }
+
+        /* EDIT AND DELETE LINKS */
+
+        .finding-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .edit-link {
+            color: #137da9;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .edit-link:hover {
+            text-decoration: underline;
+        }
+
+        .delete-link {
+            color: #d64545;
+            font-size: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .delete-link:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            text-align: center;
+            color: #9aa5b5;
+            padding: 25px 5px;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            color: #9aa5b5;
+            font-size: 11px;
+            padding: 15px;
+        }
+
+        /* RESPONSIVE DESIGN */
+
+        @media(max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pillars {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pillars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar {
+                padding: 15px 20px;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .topbar-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media(max-width: 420px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            SECURE<span>FACTORY</span>
+        </div>
+
+        <div class="brand-subtitle">
+            SECURITY MONITORING SYSTEM
+        </div>
+
+        <div class="nav-title">MAIN MENU</div>
+
+        <a href="/" class="nav-item active">▦ &nbsp; Dashboard</a>
+        <a href="#" class="nav-item">◈ &nbsp; Security Findings</a>
+        <a href="#" class="nav-item">▤ &nbsp; Infrastructure</a>
+        <a href="#" class="nav-item">◷ &nbsp; Remediation</a>
+        <a href="#" class="nav-item">▥ &nbsp; Reports & Analytics</a>
+
+        <div class="nav-title" style="margin-top:35px;">
+            SYSTEM
+        </div>
+
+        <a href="#" class="nav-item">⚙ &nbsp; Settings</a>
+        <a href="/admin/" class="nav-item">♙ &nbsp; Administration</a>
+
+        <div class="sidebar-footer">
+            Secure Code Factory<br>
+            Prototype Version 1.0
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- TOP NAVIGATION BAR -->
+
+        <div class="topbar">
+
+            <div>
+                <h2>Security Overview</h2>
+                <p>Software Development Lifecycle Monitoring</p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <div class="user">
+                    Security Monitoring
+                </div>
+
+                <a href="{% url 'logout' %}" class="logout-link">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="content">
+
+            <!-- WELCOME SECTION -->
+
+            <div class="welcome">
+
+                <div>
+                    <h1>Security Dashboard</h1>
+                    <p>Monitor vulnerabilities and security findings across your code factory.</p>
+                </div>
+
+                <div class="status">
+                    ● System Ready
+                </div>
+
+            </div>
+
+            <!-- DATABASE STATISTICS -->
+
+            <div class="stats">
+
+                <div class="stat-card blue">
+                    <div class="stat-label">Total Findings</div>
+                    <div class="stat-number">{{ total_findings }}</div>
+                    <div class="stat-note">Recorded security findings</div>
+                </div>
+
+                <div class="stat-card red">
+                    <div class="stat-label">Critical Findings</div>
+                    <div class="stat-number">{{ critical_findings }}</div>
+                    <div class="stat-note">Highest priority issues</div>
+                </div>
+
+                <div class="stat-card amber">
+                    <div class="stat-label">Open Findings</div>
+                    <div class="stat-number">{{ open_findings }}</div>
+                    <div class="stat-note">Awaiting remediation</div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-label">Resolved Findings</div>
+                    <div class="stat-number">{{ resolved_findings }}</div>
+                    <div class="stat-note">Successfully addressed</div>
+                </div>
+
+            </div>
+
+            <!-- ADD SECURITY FINDING FORM -->
+
+            {% if can_add_finding %}
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h3>Add Security Finding</h3>
+                    <span>Record a new security issue</span>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:18px;">
+
+                        <div>
+                            <label>Finding Title</label>
+                            {{ form.title }}
+                        </div>
+
+                        <div>
+                            <label>Infrastructure Pillar</label>
+                            {{ form.pillar }}
+                        </div>
+
+                        <div>
+                            <label>Severity</label>
+                            {{ form.severity }}
+                        </div>
+
+                        <div>
+                            <label>Status</label>
+                            {{ form.status }}
+                        </div>
+
+                        <div>
+                            <label>Date Discovered</label>
+                            {{ form.date_discovered }}
+                        </div>
+
+                        <div>
+                            <label>Description</label>
+                            {{ form.description }}
+                        </div>
+
+                    </div>
+
+                    <button type="submit"
+                        style="margin-top:20px; padding:12px 22px;
+                        background:#137da9; color:white; border:none;
+                        border-radius:7px; cursor:pointer; font-weight:600;">
+                        + Add Finding
+                    </button>
+
+                </form>
+
+            </section>
+
+            {% endif %}
+
+            <!-- INFRASTRUCTURE OVERVIEW -->
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h3>SDLC Infrastructure Overview</h3>
+                    <span>5 Security Pillars</span>
+                </div>
+
+                <div class="pillars">
+
+                    <div class="pillar">
+                        <div class="pillar-icon">⌘</div>
+                        <h4>Endpoint / IDE</h4>
+                        <p>Developer Environment</p>
+                    </div>
+
+                    <div class="pillar">
+                        <div class="pillar-icon">⌘</div>
+                        <h4>Version Control</h4>
+                        <p>Source Code Security</p>
+                    </div>
+
+                    <div class="pillar">
+                        <div class="pillar-icon">⚙</div>
+                        <h4>CI/CD Pipeline</h4>
+                        <p>Build and Deployment</p>
+                    </div>
+
+                    <div class="pillar">
+                        <div class="pillar-icon">▣</div>
+                        <h4>Container Registry</h4>
+                        <p>Image Security</p>
+                    </div>
+
+                    <div class="pillar">
+                        <div class="pillar-icon">◉</div>
+                        <h4>Production</h4>
+                        <p>Runtime Security</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- SECURITY SEVERITY CHART -->
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h3>Security Findings Analytics</h3>
+                    <span>Live Database Statistics</span>
+                </div>
+
+                <div style="text-align:center; padding:10px;">
+
+                    {% if chart_image %}
+
+                        <img
+                            src="data:image/png;base64,{{ chart_image }}"
+                            alt="Security findings by severity chart"
+                            style="width:100%; max-width:750px; height:auto;"
+                        >
+
+                    {% else %}
+
+                        <p>No chart data available.</p>
+
+                    {% endif %}
+
+                </div>
+
+            </section>
+
+            <!-- FINDINGS BY SEVERITY -->
+
+            <div class="lower-grid">
+
+                <section class="panel">
+
+                    <div class="panel-heading">
+                        <h3>Findings by Severity</h3>
+                        <span>Overview</span>
+                    </div>
+
+                    <div class="severity-item">
+                        <span>Critical</span>
+                        <span class="tag critical">{{ critical_findings }}</span>
+                    </div>
+
+                    <div class="severity-item">
+                        <span>High</span>
+                        <span class="tag high">{{ high_findings }}</span>
+                    </div>
+
+                    <div class="severity-item">
+                        <span>Medium</span>
+                        <span class="tag medium">{{ medium_findings }}</span>
+                    </div>
+
+                    <div class="severity-item">
+                        <span>Low</span>
+                        <span class="tag low">{{ low_findings }}</span>
+                    </div>
+
+                </section>
+
+                <!-- RECENT FINDINGS FROM DATABASE -->
+
+                <section class="panel">
+
+                    <div class="panel-heading">
+                        <h3>Recent Security Findings</h3>
+                        <span>Latest Records</span>
+                    </div>
+
+                    {% for finding in findings %}
+
+                        <div class="severity-item">
+
+                            <div style="flex:1; min-width:0;">
+
+                                <strong>{{ finding.title }}</strong><br>
+
+                                <span style="color:#8b98aa; font-size:11px;">
+                                    {{ finding.pillar }} · {{ finding.date_discovered }}
+                                </span>
+
+                                <br>
+
+                                <span style="color:#8b98aa; font-size:11px;">
+                                    Status: {{ finding.status }}
+                                </span>
+
+                                <!-- EDIT AND DELETE ACTIONS -->
+
+                                <div class="finding-actions">
+
+                                    {% if can_change_finding %}
+
+                                        <a href="{% url 'edit_finding' finding.id %}"
+                                           class="edit-link">
+                                            Edit
+                                        </a>
+
+                                    {% endif %}
+
+                                    {% if can_delete_finding %}
+
+                                        <a href="{% url 'delete_finding' finding.id %}"
+                                           class="delete-link">
+                                            Delete
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                            <span class="tag {{ finding.severity|lower }}">
+                                {{ finding.severity }}
+                            </span>
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="empty">
+                            No security findings recorded yet.<br>
+                            Findings will appear here when added.
+                        </div>
+
+                    {% endfor %}
+
+                </section>
+
+            </div>
+
+            <!-- FOOTER -->
+
+            <footer>
+                Secure Code Factory Monitoring Dashboard
+                &copy; 2026 | Academic Prototype
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

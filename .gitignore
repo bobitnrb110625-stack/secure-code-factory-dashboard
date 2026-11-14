@@ -1,0 +1,62 @@
+
+# =========================
+# PYTHON FILES
+# =========================
+
+__pycache__/
+*.py[cod]
+*.pyo
+
+# =========================
+# VIRTUAL ENVIRONMENTS
+# =========================
+
+venv/
+.venv/
+env/
+ENV/
+
+# =========================
+# DJANGO DATABASE
+# =========================
+
+db.sqlite3
+db.sqlite3-journal
+
+# =========================
+# ENVIRONMENT AND SECRET FILES
+# =========================
+
+.env
+.env.*
+
+# =========================
+# IDE FILES
+# =========================
+
+.vscode/
+.idea/
+
+# =========================
+# OPERATING SYSTEM FILES
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# TEST AND COVERAGE FILES
+# =========================
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+# =========================
+# BUILD FILES
+# =========================
+
+build/
+dist/
+*.egg-info/
