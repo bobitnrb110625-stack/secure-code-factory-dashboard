@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class SecurityFinding(models.Model):
@@ -49,8 +50,72 @@ class SecurityFinding(models.Model):
 
     date_recorded = models.DateTimeField(auto_now_add=True)
 
+    # Remediation tracking fields
+
+    remediation_action = models.TextField(
+        blank=True,
+        help_text="Describe the steps required to fix this security finding."
+    )
+
+    assigned_to = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    remediation_notes = models.TextField(
+        blank=True
+    )
+
+    date_resolved = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    due_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return self.title
 
 
-# Create your models here.
+# ==========================================
+# ACTIVITY LOG MODEL
+# ==========================================
+
+class ActivityLog(models.Model):
+
+    ACTION_CHOICES = [
+        ('Created', 'Created'),
+        ('Updated', 'Updated'),
+        ('Deleted', 'Deleted'),
+        ('Profile Updated', 'Profile Updated'),
+        ('Password Changed', 'Password Changed'),
+        ('Logged In', 'Logged In'),
+        ('Logged Out', 'Logged Out'),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='activity_logs'
+    )
+
+    action = models.CharField(
+        max_length=50,
+        choices=ACTION_CHOICES
+    )
+
+    description = models.TextField()
+
+    timestamp = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        username = self.user.username if self.user else "Deleted User"
+
+        return f"{username} - {self.action}"

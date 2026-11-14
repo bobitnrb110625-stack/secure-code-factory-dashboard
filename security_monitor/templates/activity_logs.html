@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs | Secure Code Factory</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f4f9;
+            color: #263449;
+        }
+
+        .sidebar {
+            width: 245px;
+            height: 100vh;
+            background: #101b30;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 25px 18px;
+            color: white;
+        }
+
+        .logo {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .nav-item {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 13px 15px;
+            border-radius: 7px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #263b5b;
+            color: white;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .admin-label {
+            background: #e8e0ff;
+            color: #6843a5;
+            padding: 9px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 25px;
+            max-width: 300px;
+        }
+
+        .summary-card p {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .summary-card h2 {
+            font-size: 30px;
+            color: #1976d2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .content-header h2 {
+            font-size: 19px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .search-form input {
+            padding: 11px 13px;
+            border: 1px solid #dce2eb;
+            border-radius: 6px;
+            width: 250px;
+            outline: none;
+        }
+
+        .search-form button {
+            padding: 11px 17px;
+            border: none;
+            background: #1976d2;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background: #125ca5;
+        }
+
+        .export-btn {
+            display: inline-block;
+            padding: 11px 16px;
+            background: #16834a;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .export-btn:hover {
+            background: #116638;
+        }
+
+        .filter-section {
+            background: #f8fafc;
+            border: 1px solid #e5eaf1;
+            border-radius: 9px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .filter-section h3 {
+            font-size: 15px;
+            margin-bottom: 17px;
+            color: #34445a;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #526176;
+            margin-bottom: 7px;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dce2eb;
+            border-radius: 6px;
+            background: white;
+            outline: none;
+            color: #46556a;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 11px 16px;
+            border: none;
+            background: #1976d2;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .filter-btn:hover {
+            background: #125ca5;
+        }
+
+        .reset-btn {
+            background: #64748b;
+        }
+
+        .reset-btn:hover {
+            background: #475569;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th {
+            background: #f5f7fb;
+            color: #526176;
+            text-align: left;
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 13px;
+            color: #46556a;
+        }
+
+        tr:hover {
+            background: #fafbfd;
+        }
+
+        .action {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .action-created {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .action-updated {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .action-deleted {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .action-password {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .action-login {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .action-profile {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            color: #8793a5;
+        }
+
+        .description {
+            max-width: 350px;
+            line-height: 1.5;
+        }
+
+        .results-count {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-left: 190px;
+                padding: 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .search-form {
+                width: 100%;
+            }
+
+            .search-form input {
+                width: 100%;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Secure Code Factory<br>
+            <small style="font-size:12px;color:#9caec5;">
+                Monitoring Dashboard
+            </small>
+        </div>
+
+        <a href="{% url 'dashboard' %}" class="nav-item">
+            Dashboard
+        </a>
+
+        <a href="{% url 'dashboard' %}#recent-findings" class="nav-item">
+            Security Findings
+        </a>
+
+        <a href="{% url 'dashboard' %}#infrastructure-overview" class="nav-item">
+            Infrastructure
+        </a>
+
+        <a href="{% url 'remediation_tracking' %}" class="nav-item">
+            Remediation Tracking
+        </a>
+
+        <a href="{% url 'reports_analytics' %}" class="nav-item">
+            Reports & Analytics
+        </a>
+
+        <a href="{% url 'activity_logs' %}" class="nav-item active">
+            Activity Logs
+        </a>
+
+        <a href="{% url 'settings_page' %}" class="nav-item">
+            Settings
+        </a>
+
+        <a href="/admin/" class="nav-item">
+            Administration
+        </a>
+
+        <a href="{% url 'logout' %}" class="nav-item">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Activity Logs</h1>
+
+                <p class="subtitle">
+                    Monitor and review user activities across the system.
+                </p>
+            </div>
+
+            <span class="admin-label">
+                Administrator Access
+            </span>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="summary-card">
+
+            <p>Total Recorded Activities</p>
+
+            <h2>{{ total_logs }}</h2>
+
+        </div>
+
+
+        <!-- ACTIVITY TABLE -->
+
+        <section class="content-card">
+
+            <div class="content-header">
+
+                <h2>System Activity History</h2>
+
+                <div class="header-actions">
+
+                    <!-- SEARCH -->
+
+                    <form method="GET" class="search-form">
+
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Search user, action or description..."
+                            value="{{ search_query }}"
+                        >
+
+                        <button type="submit">
+                            Search
+                        </button>
+
+                    </form>
+
+                    <!-- EXPORT CSV -->
+
+                    <a
+                        href="{% url 'export_activity_logs' %}?search={{ search_query|urlencode }}&user={{ selected_user|urlencode }}&action={{ selected_action|urlencode }}&start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}"
+                        class="export-btn"
+                    >
+                        Export CSV
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- FILTERS -->
+
+            <div class="filter-section">
+
+                <h3>Filter Activity Logs</h3>
+
+                <form method="GET" class="filter-form">
+
+                    <!-- USER FILTER -->
+
+                    <div class="filter-group">
+
+                        <label for="user">Filter by User</label>
+
+                        <select name="user" id="user">
+
+                            <option value="">All Users</option>
+
+                            {% for user_id, username in user_choices %}
+
+                                <option
+                                    value="{{ user_id }}"
+                                    {% if selected_user == user_id|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ username }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- ACTION FILTER -->
+
+                    <div class="filter-group">
+
+                        <label for="action">Filter by Action</label>
+
+                        <select name="action" id="action">
+
+                            <option value="">All Actions</option>
+
+                            {% for value, label in action_choices %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_action == value %}selected{% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- START DATE -->
+
+                    <div class="filter-group">
+
+                        <label for="start_date">From Date</label>
+
+                        <input
+                            type="date"
+                            name="start_date"
+                            id="start_date"
+                            value="{{ start_date }}"
+                        >
+
+                    </div>
+
+
+                    <!-- END DATE -->
+
+                    <div class="filter-group">
+
+                        <label for="end_date">To Date</label>
+
+                        <input
+                            type="date"
+                            name="end_date"
+                            id="end_date"
+                            value="{{ end_date }}"
+                        >
+
+                    </div>
+
+
+                    <!-- KEEP SEARCH WHEN FILTERING -->
+
+                    <input
+                        type="hidden"
+                        name="search"
+                        value="{{ search_query }}"
+                    >
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="filter-buttons">
+
+                        <button type="submit" class="filter-btn">
+                            Apply Filters
+                        </button>
+
+                        <a href="{% url 'activity_logs' %}" class="filter-btn reset-btn">
+                            Reset
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <p class="results-count">
+                Showing {{ logs|length }} matching activities.
+            </p>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Description</th>
+                            <th>Date and Time</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for log in logs %}
+
+                        <tr>
+
+                            <td>
+                                {% if log.user %}
+                                    {{ log.user.username }}
+                                {% else %}
+                                    Deleted User
+                                {% endif %}
+                            </td>
+
+                            <td>
+
+                                {% if log.action == "Created" %}
+                                    <span class="action action-created">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% elif log.action == "Updated" %}
+                                    <span class="action action-updated">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% elif log.action == "Deleted" %}
+                                    <span class="action action-deleted">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% elif log.action == "Password Changed" %}
+                                    <span class="action action-password">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% elif log.action == "Logged In" or log.action == "Logged Out" %}
+                                    <span class="action action-login">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% elif log.action == "Profile Updated" %}
+                                    <span class="action action-profile">
+                                        {{ log.action }}
+                                    </span>
+
+                                {% else %}
+                                    <span class="action action-updated">
+                                        {{ log.action }}
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td class="description">
+                                {{ log.description }}
+                            </td>
+
+                            <td>
+                                {{ log.timestamp|date:"d M Y, H:i" }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4" class="empty">
+                                No activities match your search or filters.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

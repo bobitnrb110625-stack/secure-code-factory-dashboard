@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Secure Code Factory</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f4f9;
+            display: flex;
+            min-height: 100vh;
+            color: #263247;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #101b30;
+            color: white;
+            padding: 25px 18px;
+            min-height: 100vh;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .nav-title {
+            color: #8995a9;
+            font-size: 11px;
+            margin: 25px 12px 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: block;
+            color: #c5cede;
+            text-decoration: none;
+            padding: 13px 12px;
+            border-radius: 7px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #243653;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+        }
+
+        .user-info {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: #778397;
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid #edf0f4;
+            gap: 20px;
+        }
+
+        .profile-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-label {
+            color: #778397;
+            font-size: 13px;
+        }
+
+        .profile-value {
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .role {
+            display: inline-block;
+            background: #e8eefc;
+            color: #3155a4;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            max-width: 550px;
+            padding: 12px;
+            border: 1px solid #d8dee8;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #3155a4;
+        }
+
+        .help-text {
+            display: block;
+            margin-top: 7px;
+            color: #778397;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .error-list {
+            color: #b42318;
+            font-size: 12px;
+            margin-top: 7px;
+            list-style: none;
+        }
+
+        .error-message {
+            background: #fff0ef;
+            color: #b42318;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .success-message {
+            background: #eaf8ef;
+            color: #18743b;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .submit-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #125da8;
+        }
+
+        @media (max-width: 750px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .profile-row {
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .profile-value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            SECURE CODE<br>FACTORY
+        </div>
+
+        <div class="nav-title">Main Menu</div>
+
+        <a href="{% url 'dashboard' %}" class="nav-item">
+            Dashboard
+        </a>
+
+        <a href="{% url 'dashboard' %}#recent-findings" class="nav-item">
+            Security Findings
+        </a>
+
+        <a href="{% url 'dashboard' %}#infrastructure-overview" class="nav-item">
+            Infrastructure
+        </a>
+
+        <div class="nav-title">Security Management</div>
+
+        <a href="{% url 'remediation_tracking' %}" class="nav-item">
+            Remediation Tracking
+        </a>
+
+        <a href="{% url 'reports_analytics' %}" class="nav-item">
+            Reports & Analytics
+        </a>
+
+        <div class="nav-title">System</div>
+
+        <a href="{% url 'settings_page' %}" class="nav-item active">
+            Settings
+        </a>
+
+        <a href="/admin/" class="nav-item">
+            Administration
+        </a>
+
+        <a href="{% url 'logout' %}" class="nav-item">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <main class="main">
+
+        <div class="topbar">
+            <div>
+                <h1>Settings</h1>
+                <p class="user-info">
+                    Manage your account and system preferences.
+                </p>
+            </div>
+
+            <div class="user-info">
+                Logged in as <strong>{{ user.username }}</strong>
+            </div>
+        </div>
+
+
+        <!-- PROFILE INFORMATION -->
+
+        <section class="section">
+
+            <h2>Profile Information</h2>
+
+            <p class="section-description">
+                View your account information.
+            </p>
+
+            <div class="profile-row">
+                <span class="profile-label">Username</span>
+                <span class="profile-value">{{ user.username }}</span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">First Name</span>
+                <span class="profile-value">
+                    {{ user.first_name|default:"Not provided" }}
+                </span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Last Name</span>
+                <span class="profile-value">
+                    {{ user.last_name|default:"Not provided" }}
+                </span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Email Address</span>
+                <span class="profile-value">
+                    {{ user.email|default:"Not provided" }}
+                </span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Account Status</span>
+                <span class="profile-value">
+                    {% if user.is_active %}
+                        <span class="role">Active</span>
+                    {% else %}
+                        <span class="role">Inactive</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Date Joined</span>
+                <span class="profile-value">
+                    {{ user.date_joined|date:"d M Y" }}
+                </span>
+            </div>
+
+        </section>
+
+
+        <!-- EDIT PROFILE -->
+
+        <section class="section">
+
+            <h2>Edit Profile</h2>
+
+            <p class="section-description">
+                Update your personal account information.
+            </p>
+
+            {% if profile_success %}
+                <div class="success-message">
+                    Your profile has been updated successfully!
+                </div>
+            {% endif %}
+
+            {% if profile_errors %}
+                <div class="error-message">
+                    {{ profile_errors }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'settings_page' %}">
+
+                {% csrf_token %}
+
+                <input type="hidden" name="form_type" value="profile">
+
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value="{{ user.first_name }}"
+                        maxlength="150"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        value="{{ user.last_name }}"
+                        maxlength="150"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ user.email }}"
+                        maxlength="254"
+                    >
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Save Profile
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- CHANGE PASSWORD -->
+
+        <section class="section">
+
+            <h2>Change Password</h2>
+
+            <p class="section-description">
+                Update your account password to keep your account secure.
+            </p>
+
+            {% if password_success %}
+                <div class="success-message">
+                    Your password has been changed successfully!
+                </div>
+            {% endif %}
+
+            {% if password_form.non_field_errors %}
+                <div class="error-message">
+                    {{ password_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'settings_page' %}">
+
+                {% csrf_token %}
+
+                <input type="hidden" name="form_type" value="password">
+
+                {% for field in password_form %}
+
+                    <div class="form-group">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="help-text">
+                                {{ field.help_text|safe }}
+                            </small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <ul class="error-list">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+                <button type="submit" class="submit-btn">
+                    Update Password
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- DASHBOARD PREFERENCES -->
+
+        <section class="section">
+
+            <h2>Dashboard Preferences</h2>
+
+            <p class="section-description">
+                Information about your dashboard settings.
+            </p>
+
+            <div class="profile-row">
+                <span class="profile-label">Dashboard Theme</span>
+                <span class="profile-value">Default Light Theme</span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">System</span>
+                <span class="profile-value">Secure Code Factory</span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Version</span>
+                <span class="profile-value">1.0</span>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

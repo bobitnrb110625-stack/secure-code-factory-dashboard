@@ -1,0 +1,799 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Code Factory | Remediation Tracking</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            background: #f1f4f9;
+            color: #17243a;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: #101b30;
+            color: white;
+            padding: 28px 18px;
+        }
+
+        .brand {
+            font-size: 19px;
+            font-weight: 700;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .brand span {
+            color: #25c4e8;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #8293ad;
+            padding: 0 12px;
+            margin-bottom: 40px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            color: #74849e;
+            letter-spacing: 1.5px;
+            padding: 0 12px;
+            margin-bottom: 13px;
+        }
+
+        .nav-item {
+            display: block;
+            color: #aebbd0;
+            text-decoration: none;
+            padding: 13px 12px;
+            margin-bottom: 7px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .nav-item.active,
+        .nav-item:hover {
+            background: #1c3453;
+            color: #38c9ec;
+        }
+
+        .nav-item.active {
+            border-left: 3px solid #25c4e8;
+        }
+
+        .sidebar-footer {
+            margin-top: 65px;
+            padding: 15px 12px;
+            border-top: 1px solid #293750;
+            color: #8293ad;
+            font-size: 12px;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 15px;
+        }
+
+        .topbar h2 {
+            font-size: 19px;
+        }
+
+        .topbar p {
+            color: #8793a5;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user {
+            background: #eaf4fb;
+            color: #17628c;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .logout-link {
+            background: #101b30;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .logout-link:hover {
+            background: #1c3453;
+        }
+
+        .content {
+            padding: 32px 35px;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #77849a;
+            font-size: 14px;
+        }
+
+        .status {
+            background: #e2f7ef;
+            color: #16865c;
+            padding: 9px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 27px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e7ecf3;
+            border-radius: 11px;
+            padding: 22px;
+            box-shadow: 0 3px 12px rgba(20, 40, 70, 0.03);
+        }
+
+        .stat-label {
+            color: #7c899e;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .stat-number {
+            font-size: 31px;
+            font-weight: 700;
+            color: #172b4d;
+        }
+
+        .stat-note {
+            font-size: 11px;
+            color: #9aa5b5;
+            margin-top: 8px;
+        }
+
+        .blue { border-top: 3px solid #258bd5; }
+        .red { border-top: 3px solid #e05252; }
+        .amber { border-top: 3px solid #e6a23c; }
+        .green { border-top: 3px solid #22a879; }
+
+        .panel {
+            background: white;
+            border: 1px solid #e7ecf3;
+            border-radius: 11px;
+            padding: 24px;
+            margin-bottom: 25px;
+        }
+
+        .panel-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            gap: 12px;
+        }
+
+        .panel-heading h3 {
+            font-size: 16px;
+        }
+
+        .panel-heading span {
+            color: #8b98aa;
+            font-size: 12px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1300px;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            background: #f5f8fc;
+            color: #68778d;
+            font-size: 11px;
+            padding: 13px 12px;
+            border-bottom: 1px solid #e5ebf3;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #edf0f5;
+            vertical-align: top;
+            font-size: 12px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .finding-title {
+            font-weight: 700;
+            color: #172b4d;
+            margin-bottom: 6px;
+        }
+
+        .muted {
+            color: #8995a7;
+            font-size: 11px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .critical {
+            background: #fde8e8;
+            color: #c63b3b;
+        }
+
+        .high {
+            background: #fff0df;
+            color: #c77b20;
+        }
+
+        .medium {
+            background: #fff8d9;
+            color: #a88716;
+        }
+
+        .low {
+            background: #e5f5ed;
+            color: #23845c;
+        }
+
+        .open {
+            background: #fde8e8;
+            color: #c63b3b;
+        }
+
+        .in-progress {
+            background: #fff0df;
+            color: #c77b20;
+        }
+
+        .resolved {
+            background: #e2f7ef;
+            color: #16865c;
+        }
+
+        .overdue {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            background: #fde8e8;
+            color: #c63b3b;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .due-today {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            background: #fff0df;
+            color: #c77b20;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .on-track {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            background: #e2f7ef;
+            color: #16865c;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .no-deadline {
+            color: #8995a7;
+            font-size: 11px;
+        }
+
+        .update-form {
+            min-width: 220px;
+        }
+
+        .update-form label {
+            display: block;
+            color: #526176;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 9px 0 5px;
+        }
+
+        .update-form input,
+        .update-form select,
+        .update-form textarea {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #dce3ed;
+            border-radius: 6px;
+            background: white;
+            color: #17243a;
+            font-size: 12px;
+        }
+
+        .update-form textarea {
+            min-height: 65px;
+            resize: vertical;
+        }
+
+        .update-button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #137da9;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .update-button:hover {
+            background: #10658a;
+        }
+
+        .permission-note {
+            color: #8995a7;
+            font-size: 11px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #9aa5b5;
+            padding: 35px 10px;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            color: #9aa5b5;
+            font-size: 11px;
+            padding: 15px;
+        }
+
+        @media(max-width: 1000px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .topbar {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+
+            .topbar-actions {
+                flex-wrap: wrap;
+            }
+
+            .welcome {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media(max-width: 420px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            SECURE<span>FACTORY</span>
+        </div>
+
+        <div class="brand-subtitle">
+            SECURITY MONITORING SYSTEM
+        </div>
+
+        <div class="nav-title">MAIN MENU</div>
+
+        <a href="{% url 'dashboard' %}" class="nav-item">
+            ▦ &nbsp; Dashboard
+        </a>
+
+        <a href="{% url 'dashboard' %}#recent-findings" class="nav-item">
+            ◈ &nbsp; Security Findings
+        </a>
+
+        <a href="{% url 'dashboard' %}" class="nav-item">
+            ▤ &nbsp; Infrastructure
+        </a>
+
+        <a href="{% url 'remediation_tracking' %}" class="nav-item active">
+            ◷ &nbsp; Remediation
+        </a>
+
+        <a href="{% url 'dashboard' %}" class="nav-item">
+            ▥ &nbsp; Reports & Analytics
+        </a>
+
+        <div class="nav-title" style="margin-top:35px;">
+            SYSTEM
+        </div>
+
+        <a href="/admin/" class="nav-item">
+            ♙ &nbsp; Administration
+        </a>
+
+        <div class="sidebar-footer">
+            Secure Code Factory<br>
+            Prototype Version 1.0
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div>
+                <h2>Remediation Tracking</h2>
+                <p>Security Vulnerability Resolution Management</p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <div class="user">
+                    {{ request.user.username }}
+                </div>
+
+                <a href="{% url 'logout' %}" class="logout-link">
+                    Logout
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="content">
+
+            <div class="welcome">
+
+                <div>
+                    <h1>Remediation Overview</h1>
+                    <p>
+                        Monitor, assign, update and track the resolution
+                        of security findings.
+                    </p>
+                </div>
+
+                <div class="status">
+                    ● Tracking Active
+                </div>
+
+            </div>
+
+            <div class="stats">
+
+                <div class="stat-card blue">
+                    <div class="stat-label">Total Findings</div>
+                    <div class="stat-number">{{ total_findings }}</div>
+                    <div class="stat-note">All recorded security issues</div>
+                </div>
+
+                <div class="stat-card red">
+                    <div class="stat-label">Open Findings</div>
+                    <div class="stat-number">{{ open_findings }}</div>
+                    <div class="stat-note">Awaiting remediation</div>
+                </div>
+
+                <div class="stat-card amber">
+                    <div class="stat-label">In Progress</div>
+                    <div class="stat-number">{{ in_progress_findings }}</div>
+                    <div class="stat-note">Currently being addressed</div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-label">Resolved Findings</div>
+                    <div class="stat-number">{{ resolved_findings }}</div>
+                    <div class="stat-note">Successfully resolved</div>
+                </div>
+
+            </div>
+
+            <section class="panel">
+
+                <div class="panel-heading">
+                    <h3>Security Finding Remediation</h3>
+                    <span>{{ total_findings }} records</span>
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>SECURITY FINDING</th>
+                                <th>SEVERITY</th>
+                                <th>STATUS</th>
+                                <th>DUE DATE</th>
+                                <th>REMEDIATION DETAILS</th>
+                                <th>RESOLUTION DATE</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% now "Y-m-d" as today %}
+
+                            {% for finding in findings %}
+
+                            <tr>
+
+                                <td>
+                                    <div class="finding-title">
+                                        {{ finding.title }}
+                                    </div>
+
+                                    <div class="muted">
+                                        {{ finding.pillar }}
+                                    </div>
+
+                                    <div class="muted">
+                                        Discovered: {{ finding.date_discovered }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="tag {{ finding.severity|lower }}">
+                                        {{ finding.severity }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="tag {% if finding.status == 'Open' %}open{% elif finding.status == 'In Progress' %}in-progress{% else %}resolved{% endif %}">
+                                        {{ finding.status }}
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    {% if finding.due_date %}
+
+                                        <div>
+                                            {{ finding.due_date|date:"d M Y" }}
+                                        </div>
+
+                                        {% if finding.status != 'Resolved' %}
+
+                                            {% if finding.due_date|date:"Y-m-d" < today %}
+
+                                                <span class="overdue">
+                                                    OVERDUE
+                                                </span>
+
+                                            {% elif finding.due_date|date:"Y-m-d" == today %}
+
+                                                <span class="due-today">
+                                                    DUE TODAY
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="on-track">
+                                                    ON TRACK
+                                                </span>
+
+                                            {% endif %}
+
+                                        {% else %}
+
+                                            <span class="on-track">
+                                                COMPLETED
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <span class="no-deadline">
+                                            No due date set
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+
+                                    {% if can_change_finding %}
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'update_remediation' finding.id %}"
+                                        class="update-form"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <label>Remediation Status</label>
+
+                                        <select name="status" required>
+                                            {% for value, label in status_choices %}
+                                                <option value="{{ value }}"
+                                                    {% if finding.status == value %}selected{% endif %}>
+                                                    {{ label }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <label>Remediation Due Date</label>
+
+                                        <input
+                                            type="date"
+                                            name="due_date"
+                                            value="{{ finding.due_date|date:'Y-m-d' }}"
+                                        >
+
+                                        <label>Remediation Action</label>
+
+                                        <textarea
+                                            name="remediation_action"
+                                            placeholder="Describe the steps needed to fix this issue..."
+                                        >{{ finding.remediation_action }}</textarea>
+
+                                        <label>Assigned To</label>
+
+                                        <input
+                                            type="text"
+                                            name="assigned_to"
+                                            value="{{ finding.assigned_to }}"
+                                            placeholder="Person responsible"
+                                        >
+
+                                        <label>Remediation Notes</label>
+
+                                        <textarea
+                                            name="remediation_notes"
+                                            placeholder="Record progress and actions taken..."
+                                        >{{ finding.remediation_notes }}</textarea>
+
+                                        <button type="submit" class="update-button">
+                                            Save Remediation
+                                        </button>
+
+                                    </form>
+
+                                    {% else %}
+
+                                    <span class="permission-note">
+                                        You do not have permission to update remediation details.
+                                    </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td>
+                                    {% if finding.date_resolved %}
+                                        {{ finding.date_resolved|date:"d M Y" }}
+                                    {% else %}
+                                        <span class="muted">Not resolved</span>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty">
+                                        No security findings have been recorded yet.
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+            <footer>
+                Secure Code Factory Monitoring Dashboard
+                &copy; 2026 | Academic Prototype
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>
