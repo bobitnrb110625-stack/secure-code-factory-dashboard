@@ -1,0 +1,54 @@
+
+version: 2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.14
+
+    working_directory: ~/project
+
+    steps:
+      # Download the GitHub repository
+      - checkout
+
+      # Restore previously installed packages
+      - restore_cache:
+          keys:
+            - secure-code-factory-v1-{{ checksum "requirements.txt" }}
+            - secure-code-factory-v1-
+
+      # Install project dependencies
+      - run:
+          name: Upgrade pip
+          command: python -m pip install --upgrade pip
+
+      - run:
+          name: Install project dependencies
+          command: python -m pip install -r requirements.txt
+
+      # Save packages for faster future builds
+      - save_cache:
+          key: secure-code-factory-v1-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/.cache/pip
+
+      # Check Django configuration
+      - run:
+          name: Check Django configuration
+          command: python manage.py check
+
+      # Check whether model changes need migrations
+      - run:
+          name: Check database migrations
+          command: python manage.py makemigrations --check --dry-run
+
+      # Run automated Django tests
+      - run:
+          name: Run automated security monitor tests
+          command: python manage.py test security_monitor --verbosity=2
+
+workflows:
+  secure-code-factory-ci:
+    jobs:
+      - build-and-test
