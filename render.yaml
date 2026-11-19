@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: secure-code-factory-dashboard
+    runtime: python
+    plan: free
+    autoDeployTrigger: off
+    buildCommand: bash build.sh
+    startCommand: gunicorn secure_code_factory.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
