@@ -1,0 +1,13 @@
+
+---
+name: ci tests
+
+# Discover the existing Django test file
+discover: python -c "print('security_monitor/tests.py')"
+
+# Run Django tests using pytest and generate JUnit results
+run: python -m pytest --ds=secure_code_factory.settings --junitxml="<< outputs.junit >>" << test.atoms >>
+
+# JUnit report location
+outputs:
+  junit: test-results/junit.xml

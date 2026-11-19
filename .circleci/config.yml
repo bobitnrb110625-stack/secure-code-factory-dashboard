@@ -9,16 +9,16 @@ jobs:
     working_directory: ~/project
 
     steps:
-      # Download the GitHub repository
+      # Get project code from GitHub
       - checkout
 
-      # Restore previously installed packages
+      # Restore dependency cache
       - restore_cache:
           keys:
             - secure-code-factory-v1-{{ checksum "requirements.txt" }}
             - secure-code-factory-v1-
 
-      # Install project dependencies
+      # Install dependencies
       - run:
           name: Upgrade pip
           command: python -m pip install --upgrade pip
@@ -27,26 +27,35 @@ jobs:
           name: Install project dependencies
           command: python -m pip install -r requirements.txt
 
-      # Save packages for faster future builds
+      # Save dependency cache
       - save_cache:
           key: secure-code-factory-v1-{{ checksum "requirements.txt" }}
           paths:
             - ~/.cache/pip
 
-      # Check Django configuration
+      # Django configuration check
       - run:
           name: Check Django configuration
           command: python manage.py check
 
-      # Check whether model changes need migrations
+      # Verify migrations
       - run:
           name: Check database migrations
           command: python manage.py makemigrations --check --dry-run
 
-      # Run automated Django tests
+      # Run CircleCI Smarter Testing
       - run:
-          name: Run automated security monitor tests
-          command: python manage.py test security_monitor --verbosity=2
+          name: Run Django test suite
+          command: circleci testsuite run "ci tests"
+
+      # Upload test results to CircleCI
+      - store_test_results:
+          path: test-results
+
+      # Keep test reports available for download
+      - store_artifacts:
+          path: test-results
+          destination: junit-reports
 
 workflows:
   secure-code-factory-ci:
